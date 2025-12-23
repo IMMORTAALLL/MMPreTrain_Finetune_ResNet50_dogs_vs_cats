@@ -1,3 +1,32 @@
+# 🐶🐱 MMPreTrain ResNet50 Finetune on Dogs vs Cats
+
+> 本仓库基于 [open-mmlab/mmpretrain](https://github.com/open-mmlab/mmpretrain)。
+> 这是我个人练习用的版本，用来：
+>
+> - 使用 MMPretrain 在 **Kaggle Dogs vs Cats** 数据集上微调 **ResNet50**
+> - 熟悉自定义数据集、配置文件编写、加载预训练权重、冻结主干等操作
+> - 保存一份可以直接复现的实验代码和配置
+
+## 我做了哪些改动
+
+- 新增配置：`configs/resnet/resnet50_dogs_vs_cats.py`
+- 数据集按照有监督学习划分，由于提交通道已经关闭，将验证与测试从训练集中划分
+- 数据结构为
+```
+  dogs_vs_cats_split/
+  train/{cat,dog}
+  val/{cat,dog}
+  test/{cat,dog}
+```
+- 使用预训练权重：`resnet50_8xb32_in1k` 并冻结前 2 个 stage（`frozen_stages=2`）
+- 在 `dogs_vs_cats_split` 数据集上训练 20 epoch，验证集 Top-1 ≈ **99.36%**，测试集 Top-1 ≈ **99.12%**
+- 训练命令示例：
+  ```bash
+  python tools/train.py configs/resnet/resnet50_dogs_vs_cats.py \
+    --work-dir work_dirs/resnet50_dogs_vs_cats --amp
+
+
+
 <div align="center">
 
 <img src="resources/mmpt-logo.png" width="600"/>
